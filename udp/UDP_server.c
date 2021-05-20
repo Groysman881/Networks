@@ -23,13 +23,19 @@ int main(int argc,char* argv[]) {
         perror("socket creation failed");
         exit(EXIT_FAILURE);
     }
+	char* servHost = (char*)malloc(20);
+	int servPort;
+	printf("Server port : ");
+	scanf("%d",&servPort);
+	printf("Server address : ");
+	scanf("%s",servHost);
  
     memset(&servaddr, 0, sizeof(servaddr));
     memset(&cliaddr, 0, sizeof(cliaddr));
       
     servaddr.sin_family    = AF_INET; 
-    servaddr.sin_addr.s_addr = inet_addr(argv[1]);
-    servaddr.sin_port = htons(atoi(argv[2]));
+    servaddr.sin_addr.s_addr = inet_addr(servHost);
+    servaddr.sin_port = htons(servPort);
 	
     
     if ( bind(sockfd, (struct sockaddr *)&servaddr, 

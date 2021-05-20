@@ -12,18 +12,24 @@
 int main(int argc,char* argv[]){
 
 	int broadcast = 1;
-	int port = atoi(argv[3]);
+	int servPort;
 	char hostBuffer[256];
 	struct hostent *host_entry;
+	int cliPort;
+	char* servAddr = (char*)malloc(20);
+	printf("Client port : ");
+	scanf("%d",&cliPort);
+	printf("Server port : ");
+	scanf("%d",&servPort);
+	printf("Server address : ");
+	scanf("%s",servAddr);
 	int hostname = gethostname(hostBuffer,sizeof(hostBuffer));
 	host_entry = gethostbyname(hostBuffer);
-	printf("%s\n",inet_ntoa(*((struct in_addr*)host_entry->h_addr_list[0])));
-	printf("%d\n",port);
 	struct sockaddr_in server,client;
 	memset(&client,0,sizeof(client));
 	client.sin_family = AF_INET;
 	client.sin_addr = *(struct in_addr*)host_entry->h_addr_list[0];
-	client.sin_port = atoi(argv[1]);
+	client.sin_port = htons(cliPort);//???
 	struct sockaddr from;
 	int sock = socket(AF_INET,SOCK_DGRAM,0);
 	fcntl(sock,F_SETFL,O_NONBLOCK);
@@ -40,12 +46,12 @@ int main(int argc,char* argv[]){
 	}
 	
 	server.sin_family = AF_INET;
-	server.sin_addr.s_addr = inet_addr(argv[2]);
-	server.sin_port = htons(port);
+	server.sin_addr.s_addr = inet_addr(servAddr);
+	server.sin_port = htons(servPort);
 
 	int rc = bind(sock,(struct sockaddr*)&client,sizeof(client));
 	if(rc < 0){
-		printf("%s : cannot bind port number %d \n",argv[0],port);
+		printf("%s : cannot bind port number %d \n",argv[0],cliPort);
 		exit(1);
 	}
 	char buf[81];	
@@ -66,7 +72,6 @@ int main(int argc,char* argv[]){
 		printf("%s\n",buf);
 		
 		n = recvfrom(sock,buf,80,0,&from,&len);
-		printf("n = %d\n",n);
 		if(n > 0){			
 			break;
 		}

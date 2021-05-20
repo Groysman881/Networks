@@ -14,8 +14,6 @@ hostname = socket.gethostname();
 fcntl.fcntl(client,fcntl.F_SETFL,os.O_NONBLOCK);
 
 
-#client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1);
-
 client.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
 client.bind((socket.gethostbyname(hostname), cliPort));
