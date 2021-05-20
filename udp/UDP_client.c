@@ -56,7 +56,8 @@ int main(int argc,char* argv[]){
 	}
 	char buf[81];	
 
-	int len,n;
+	socklen_t len;
+	int n;
 	len = sizeof(from);
 	while(1){
 		memset(buf,'\0',81);

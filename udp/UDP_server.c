@@ -45,7 +45,8 @@ int main(int argc,char* argv[]) {
         exit(1);
     }
      
-    int len, n;
+    socklen_t len;
+	int n;
   
     len = sizeof(cliaddr);
 	while(1){
