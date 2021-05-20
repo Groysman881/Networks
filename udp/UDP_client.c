@@ -8,6 +8,7 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <netdb.h>
+#include <poll.h>
 
 int main(int argc,char* argv[]){
 
@@ -26,6 +27,7 @@ int main(int argc,char* argv[]){
 	int hostname = gethostname(hostBuffer,sizeof(hostBuffer));
 	host_entry = gethostbyname(hostBuffer);
 	struct sockaddr_in server,client;
+	struct pollfd fds[1];
 	memset(&client,0,sizeof(client));
 	client.sin_family = AF_INET;
 	client.sin_addr = *(struct in_addr*)host_entry->h_addr_list[0];
@@ -38,7 +40,7 @@ int main(int argc,char* argv[]){
 		exit(1);
 	}
 	memset(&server,0,sizeof(server));
-
+	memset(fds,0,sizeof(fds));
 	if(setsockopt(sock,SOL_SOCKET,SO_BROADCAST,&broadcast,sizeof(broadcast)) ==
 	-1){
 		perror("setsockopt(SO_BROADCAST");
@@ -54,8 +56,10 @@ int main(int argc,char* argv[]){
 		printf("%s : cannot bind port number %d \n",argv[0],cliPort);
 		exit(1);
 	}
+	
+	fds[0].fd = sock;
+	fds[0].events = POLLIN;
 	char buf[81];	
-
 	socklen_t len;
 	int n;
 	len = sizeof(from);
@@ -67,14 +71,20 @@ int main(int argc,char* argv[]){
 			perror("sendto");
 			exit(1);
 		}
-		sleep(10);
-		memset(buf,0,81);
-		strcpy(buf,"\0");
-		printf("%s\n",buf);
-		
-		n = recvfrom(sock,buf,80,0,&from,&len);
-		if(n > 0){			
-			break;
+		int ret = poll(fds,1,10000);
+
+		if(ret == -1){
+			perror("poll");
+			exit(1);
+		}
+
+		else if(ret == 0)
+			continue;
+
+		else if(ret > 0){
+			if(fds[0].revents & POLLIN)
+				n = recvfrom(sock,buf,80,0,&from,&len);
+				break;
 		}
 	}
 	printf("SERVER found IP %s\n",inet_ntoa(((struct sockaddr_in*)&from)->sin_addr));

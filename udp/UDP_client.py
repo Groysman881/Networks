@@ -3,6 +3,7 @@ import string
 import socket
 import fcntl,os
 import errno
+import select
 from time import sleep
 
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
@@ -17,20 +18,19 @@ fcntl.fcntl(client,fcntl.F_SETFL,os.O_NONBLOCK);
 client.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
 client.bind((socket.gethostbyname(hostname), cliPort));
-while True:
+
+pollObj = select.poll();
+pollObj.register(client,select.POLLIN);
+answer = False
+while (not answer):
+	print("Check!");
 	client.sendto(msg.encode(),(servAddr,servPort));
 	print("Send!");
-	sleep(10);
-	try:
-		data, addr = client.recvfrom(40);
-	except socket.error as e:
-		err = e.args[0];
-		if(err == errno.EAGAIN or err == errno.EWOULDBLOCK):
-			continue;
-		else:
-			sys.exit(1);
-	if(len(data) > 0):
-		print("Server found IP",addr[0]);
-		break;
+	fds = pollObj.poll(10000);
+	for descriptor,event in fds:
+		if(event == select.POLLIN):
+			data,addr = client.recvfrom(40);
+			print("Server found IP",addr[0]);
+			answer = True
 
 client.close();
