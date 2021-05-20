@@ -3,8 +3,6 @@ import socket
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 
-#server
-
 servPort = int(input("Server port : "));
 servAddr = input("Server address : ");
 

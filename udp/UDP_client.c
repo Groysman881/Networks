@@ -29,7 +29,7 @@ int main(int argc,char* argv[]){
 	memset(&client,0,sizeof(client));
 	client.sin_family = AF_INET;
 	client.sin_addr = *(struct in_addr*)host_entry->h_addr_list[0];
-	client.sin_port = htons(cliPort);//???
+	client.sin_port = htons(cliPort);
 	struct sockaddr from;
 	int sock = socket(AF_INET,SOCK_DGRAM,0);
 	fcntl(sock,F_SETFL,O_NONBLOCK);
