@@ -23,12 +23,12 @@ int main(int argc,char* argv[]) {
         perror("socket creation failed");
         exit(EXIT_FAILURE);
     }
-	char* servHost = (char*)malloc(20);
-	int servPort;
-	printf("Server port : ");
-	scanf("%d",&servPort);
-	printf("Server address : ");
-	scanf("%s",servHost);
+    char* servHost = (char*)malloc(20);
+    int servPort;
+    printf("Server port : ");
+    scanf("%d",&servPort);
+    printf("Server address : ");
+    scanf("%s",servHost);
  
     memset(&servaddr, 0, sizeof(servaddr));
     memset(&cliaddr, 0, sizeof(cliaddr));
