@@ -58,7 +58,7 @@ int main(int argc,char* argv[]) {
 		sendto(sockfd, (char *)hello, strlen(hello), 
 		    0, (struct sockaddr *) &cliaddr,
 			    len);
-		//`printf("Hello message sent.\n"); 
+		
 	}
     return 0;
 }
