@@ -49,15 +49,11 @@ int main(int argc,char* argv[]) {
   
     len = sizeof(cliaddr);
 	while(1){
-		n = recvfrom(sockfd, (char *)buffer, MAXLINE, 
-					0, ( struct sockaddr *) &cliaddr,
-					&len);
+		n = recvfrom(sockfd, (char *)buffer, MAXLINE, 0, ( struct sockaddr *)&cliaddr, &len);
 		buffer[n] = '\0';
 
 		printf("Client request IP =  %s\n",inet_ntoa(((struct sockaddr_in*)&cliaddr)->sin_addr));
-		sendto(sockfd, (char *)hello, strlen(hello), 
-		    0, (struct sockaddr *) &cliaddr,
-			    len);
+		sendto(sockfd, (char *)hello, strlen(hello), 0, (struct sockaddr *)&cliaddr, len);
 		
 	}
     return 0;
