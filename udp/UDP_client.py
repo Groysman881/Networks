@@ -8,8 +8,8 @@ from time import sleep
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 msg = "Client lookup";
 cliPort = int(input("Client port : "));
-servAddr = input("Server address : ");
 servPort = int(input("Server port : "));
+servAddr = input("Server address : ");
 hostname = socket.gethostname();
 fcntl.fcntl(client,fcntl.F_SETFL,os.O_NONBLOCK);
 
