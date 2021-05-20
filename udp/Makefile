@@ -10,5 +10,5 @@ server.o : UDP_server.c
 	gcc -c UDP_server.c
  	
 clean :
-	rm -rf *.o wr rd
+	rm -rf *.o client server
 
